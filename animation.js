@@ -5,6 +5,37 @@ var clear = function(e){
     box.innerHTML = null;
 }
 
+var click = function(){
+    if (color == "black"){
+	this.color = "red";
+    }
+    else{
+	remove();
+    }
+},
+
+var newCircle = function(cx, cy){
+    var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    var c = {x: cx,
+	     y: cy,
+	     radius: "10",
+	     color: "black",
+	     svg = circle,
+	     display = function(){
+		 this.svg.setAttribute("cx", cx.toString() );
+		 this.svg.setAttribute("cy", cy.toString() );
+		 this.svg.setAttribute("r", "10" );
+		 this.svg.setAttribute("fill", this.color );
+		 box.appendChild(circle);
+		 this.svg.addEventListener("click", click);
+	     },
+	     remove = function(){
+		 
+	     }
+	    }
+    return c;   
+}
+
 var second = function(e){
     if (this.getAttribute("fill") == "red"){
 	this.setAttribute("fill", "blue");
@@ -37,13 +68,6 @@ var draw = function(e){
     box.appendChild(circle);
     circle.addEventListener("click", second, true);
 }
-
-var rec = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-rec.setAttribute("x", "250" );
-rec.setAttribute("y", "250" );
-rec.setAttribute("width", "250" );
-rec.setAttribute("height", "250" );
-rec.setAttribute("stroke", "black" );
 
 c.addEventListener("click", clear);
 box.addEventListener("click", draw);
