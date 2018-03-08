@@ -5,68 +5,40 @@ var clear = function(e){
     box.innerHTML = null;
 }
 
-var click = function(){
-    if (color == "black"){
-	this.color = "red";
-    }
-    else{
-	remove();
-    }
-},
-
 var newCircle = function(cx, cy){
-    var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     var c = {x: cx,
 	     y: cy,
 	     radius: "10",
 	     color: "black",
-	     svg = circle,
-	     display = function(){
+	     svg: document.createElementNS("http://www.w3.org/2000/svg", "circle"),
+	     display: function(){
 		 this.svg.setAttribute("cx", cx.toString() );
 		 this.svg.setAttribute("cy", cy.toString() );
-		 this.svg.setAttribute("r", "10" );
+		 this.svg.setAttribute("r", this.radius );
 		 this.svg.setAttribute("fill", this.color );
-		 box.appendChild(circle);
-		 this.svg.addEventListener("click", click);
+		 box.appendChild(this.svg);
+		 this.svg.addEventListener("click", this.remove);
 	     },
-	     remove = function(){
-		 
+	     remove: function(e){
+		 if ( e.target.getAttribute("fill") == "black"){
+		     e.target.setAttribute("fill", "red");
+		     e.stopPropagation();
+		 }
+		 else{
+		     box.removeChild(e.target);
+		     e.stopPropagation();
+		     randX = Math.floor( Math.random() * 500 );
+		     randY = Math.floor( Math.random() * 500 );
+		     newCircle(randX, randY);
+		 }
 	     }
 	    }
+    c.display();
     return c;   
 }
 
-var second = function(e){
-    if (this.getAttribute("fill") == "red"){
-	this.setAttribute("fill", "blue");
-	e.stopPropagation();
-    }
-    else{
-	box.removeChild(this);
-	e.stopPropagation();
-	var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-	x = Math.floor( Math.random() * 500 );
-	y = Math.floor( Math.random() * 500 );
-	circle.setAttribute("cx", x.toString() );
-	circle.setAttribute("cy", y.toString() );
-	circle.setAttribute("r", "10" );
-	circle.setAttribute("fill", "red" );
-	box.appendChild(circle);
-	circle.addEventListener("click", second, true);
-    }
-}
-
 var draw = function(e){
-    x = e.offsetX;
-    y = e.offsetY;
-    
-    var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", x.toString() );
-    circle.setAttribute("cy", y.toString() );
-    circle.setAttribute("r", "10");
-    circle.setAttribute("fill", "red");
-    box.appendChild(circle);
-    circle.addEventListener("click", second, true);
+    newCircle(e.offsetX, e.offsetY);
 }
 
 c.addEventListener("click", clear);
